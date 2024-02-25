@@ -21,17 +21,15 @@ class GetHeadHunter(VacancyAPI, Vacancy):
     def get_vacancy(self):
         data = requests.get(f"{self.url}/vacancies",
                             params={'text': self.name,
-                                        'area': 113,
-                                        'enable_snippets': "true",
-                                        'only_with_salary': "true",
-                                        'per_page': self.top_n}).json()
+                                    'area': 113,
+                                    'enable_snippets': "true",
+                                    'only_with_salary': "true",
+                                    'per_page': self.top_n}).json()
         return data
 
     def get_json(self):
         with open(FILE, "w", encoding="UTF-8") as file:
             file.write(json.dumps(self.get_vacancy, indent=4, ensure_ascii=False))
-
-
 
 
 if __name__ == '__main__':
