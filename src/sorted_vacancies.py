@@ -4,13 +4,23 @@ from config import FILE
 from pprint import pprint
 
 
-class Sortedvacancies():
+class SortedVacancies:
+    """
+    Класс для сортировки вакансий
+    """
     def __init__(self):
+        """
+        Создание экземпляра класса SortedVacancies
+        """
         self.hh_sorted = []
         self.date_format = None
 
     @property
     def hh_sorted_vacancies(self):
+        """
+        Метод получения данных из файла.json и его последующая сортировка
+        :return: list
+        """
         with open(FILE, encoding="UTF-8") as file:
             content = json.load(file)
         for i in content['items']:
@@ -30,10 +40,9 @@ class Sortedvacancies():
                 'responsibility': i['snippet']['responsibility'],
                 'date': self.date_format
             })
-        return self.hh_sorted
+            return self.hh_sorted
 
 
 if __name__ == '__main__':
-    r = Sortedvacancies()
+    r = SortedVacancies()
     pprint(r.hh_sorted_vacancies)
-    
