@@ -29,7 +29,3 @@ class DebugUsersJson(InputForm):
         if self.city.isdigit():
             raise TypeError("Город не может быть числом")
         return self.city
-
-if __name__ == '__main__':
-    r = DebugUsersJson()
-    print(r.user_input_str())

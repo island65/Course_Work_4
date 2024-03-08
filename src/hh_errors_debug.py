@@ -32,7 +32,3 @@ class HHRequestsDebug(InputForm):
             raise TypeError("Запрос не может быть числом")
         else:
             return self.search_query
-
-if __name__ == '__main__':
-    r = HHRequestsDebug()
-    print(r.user_input_int())

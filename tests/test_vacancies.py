@@ -1,10 +1,30 @@
 import pytest
-from src.vacancies import Vacancy
+from src.vacancy_class import Vacancy
 
 
 @pytest.fixture
 def test_vacancy():
-    return Vacancy("python", 1)
+    return {'items': [{"name": "Стажер-программист",
+                       "area": {"name": "Ростов-на-Дону"},
+                       "salary": {"from": 30000},
+                       "snippet": {
+                           "requirement": "Имеете хорошие знания html. — Имеете начальные знания PHP. — Понимаете что такое CMS, в идеале опыт работы с какой-то из...",
+                           "responsibility": "Наполнять контентом сайты на системе управления Bitrix. — Делать мелкие правки html кода. — Редактировать настройки сайтов через интерфейс. Открытое к предложениям..."},
+                       "published_at": "2024-03-06T16:55:57+0300"}]}
+
+
+def test_hh_data_validation(test_vacancy):
+    assert Vacancy.hh_data_validation(test_vacancy) == [{"name": "Стажер-программист",
+                                                         "city": "Ростов-на-Дону",
+                                                         "min_salary": 30000,
+                                                         "requirement": "Имеете хорошие знания html. — Имеете начальные знания PHP. — Понимаете что такое CMS, в идеале опыт работы с какой-то из...",
+                                                         "responsibility": "Наполнять контентом сайты на системе управления Bitrix. — Делать мелкие правки html кода. — Редактировать настройки сайтов через интерфейс. Открытое к предложениям...",
+                                                         "date": "06.03.2024"}]
+
+
+def test_errors_vacancies_sorted():
+    with pytest.raises(TypeError):
+        Vacancy("python")
 
 
 def test_name_error(test_vacancy):
@@ -19,11 +39,12 @@ def test_page_error(test_vacancy):
         test_vacancy.page = "something"
 
 
-def test_str(test_vacancy):
+def test_str():
     """Проверка метода str"""
-    assert str(test_vacancy) == "python"
-
-
-def test_repr(test_vacancy):
-    """Проверка метода repr"""
-    assert repr(test_vacancy) == "Vacancy(('python', 1))"
+    r = Vacancy('Стажер-программист', 'Ростов-на-Дону', '30000',
+                'Имеете хорошие знания html. — Имеете начальные знания PHP. — Понимаете что такое CMS, в идеале опыт работы с какой-то из...',
+                'Наполнять контентом сайты на системе управления Bitrix. — Делать мелкие правки html кода. — Редактировать настройки сайтов через интерфейс. Открытое к предложениям...',
+                '06.03.2024')
+    assert str(r) == (f"Город: Ростов-на-Дону\nДата публикации: 06.03.2024\n"
+                      f"Должность: Стажер-программист\nТребование: Имеете хорошие знания html. — Имеете начальные знания PHP. — Понимаете что такое CMS, в идеале опыт работы с какой-то из...\n"
+                      f"Ответственность: Наполнять контентом сайты на системе управления Bitrix. — Делать мелкие правки html кода. — Редактировать настройки сайтов через интерфейс. Открытое к предложениям...\nЗарплата: 30000\n")

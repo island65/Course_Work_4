@@ -1,7 +1,9 @@
 from src.hh_errors_debug import HHRequestsDebug
 from src.debug_users_json import DebugUsersJson
-from src.sorted_vacancies import SortedVacancies
-from hh_connection import GetHeadHunter
+from src.vacancy_class import Vacancy
+from src.hh_connection import GetHeadHunter
+from src.utils import read_data
+from src.json_saver import JsonSaver
 
 
 class UserInteractionHH(HHRequestsDebug):
@@ -14,8 +16,11 @@ class UserInteractionHH(HHRequestsDebug):
         """
         search_query = self.user_input_str()
         top_n = self.user_input_int()
-        search_result = GetHeadHunter(search_query, top_n)
-        search_result.get_json()
+        hh = GetHeadHunter(search_query, top_n)
+        vacancies = hh.get_vacancy
+        sorted_vacancies = Vacancy.hh_data_validation(vacancies)
+        json_saver = JsonSaver()
+        json_saver.write_data_json(sorted_vacancies)
 
 
 class UserInteractionJson(DebugUsersJson):
@@ -28,27 +33,19 @@ class UserInteractionJson(DebugUsersJson):
         :return:
         """
         vacancies_list = []
-        json_file = SortedVacancies()
-        json_vacancies = json_file.hh_sorted_vacancies
+        json_file = read_data()
         salary = self.user_input_int()
         city = self.user_input_str()
 
-        for vacancy in json_vacancies:
+        for vacancy in json_file:
             if salary > vacancy['min_salary']:
                 continue
             if city == vacancy['city']:
-                vacancies_list.append(vacancy)
+                vacancies_list.append(Vacancy(**vacancy))
             if city == '':
-                vacancies_list.append(vacancy)
+                vacancies_list.append(Vacancy(**vacancy))
 
         for result in vacancies_list:
-            print(f"Город: {result['city']}\nДата публикации: {result['date']}\n"
-                  f"Должность: {result['name']}\nТребование: {result['requirement']}\n"
-                  f"Ответственность: {result['responsibility']}\nЗарплата от {result['min_salary']}\nЗарплата до {result['max_salary']}")
+            print(result)
         if len(vacancies_list) == 0:
             print(f'Результатов 0')
-
-
-if __name__ == '__main__':
-    r = UserInteractionHH()
-    print(r.hh_user_search())

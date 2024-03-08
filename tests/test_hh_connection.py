@@ -1,6 +1,7 @@
 import pytest
 from src.hh_connection import GetHeadHunter
 
+
 @pytest.fixture
 def test_get_head_hunter():
     return GetHeadHunter("python", 1)
@@ -22,6 +23,6 @@ def test_url(test_get_head_hunter):
 
 
 def test_error_connection():
-    """Проверка на наличе ошибок"""
+    """Проверка на наличие ошибок"""
     with pytest.raises(TypeError):
         GetHeadHunter()
